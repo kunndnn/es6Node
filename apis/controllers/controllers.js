@@ -1,53 +1,74 @@
 import userModel from "../../models/users.js";
 import userCategoryModel from "../../models/userCategories.js";
-
+import { asyncHandler } from "../../helpers/asyncHandler.js";
+import { ApiResponse } from "../../helpers/response.js";
+import { encryptData, decryptData } from "../../helpers/hashing.js";
 /**
  * To get the user data with joined to categories.
  * @constructor
  * @param {string} name - The name of the person.
  * @param {email} email - The email of the person.
  */
-const get = async (req, res) => {
-  try {
-    const data = await userModel.aggregate([
-      {
-        $lookup: {
-          from: "usercategories",
-          localField: "_id",
-          foreignField: "userId",
-          as: "usersData",
-        },
+
+const get = asyncHandler(async (req, res) => {
+  const data = await userModel.aggregate([
+    {
+      $lookup: {
+        from: "usercategories",
+        localField: "_id",
+        foreignField: "userId",
+        as: "usersData",
       },
-    ]);
-    return res.json({
-      success: true,
-      message: "your data",
-      data,
+    },
+  ]);
+  return res.status(200).json(new ApiResponse(200, "your response", data));
+  // return res.json({
+  //   success: true,
+  //   message: "your data",
+  //   data,
+  // });
+});
+
+const set = asyncHandler(async (req, res) => {
+  const { name, email } = req.body;
+  const { _id } = await new userModel({
+    name,
+    email,
+  }).save();
+  await new userCategoryModel({ userId: _id, name: Math.random() }).save();
+  return res.json({
+    success: true,
+    message: "your entered successfully",
+  });
+});
+
+const allUsers = asyncHandler(async (req, res) => {
+  const users = await userModel
+    .find()
+    .select("_id name email")
+    .then((users) =>
+      users.map((user) => {
+        user.name = decryptData(user.name);
+        return user;
+      })
+    )
+    .then((users) => {
+      users.sort((a, b) => {
+        //10 ms
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+      return users.map((user) => {
+        //12 ms
+        user.name = encryptData(user.name);
+        return user;
+      });
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: `Server error ${error}`,
-    });
-  }
-};
-const set = async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const { _id } = await new userModel({
-      name,
-      email,
-    }).save();
-    await new userCategoryModel({ userId: _id, name: Math.random() }).save();
-    return res.json({
-      success: true,
-      message: "your entered successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-};
-export { get, set };
+  return res.status(200).json(new ApiResponse(200, "all data", users));
+});
+export { get, set, allUsers };
