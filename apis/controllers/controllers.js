@@ -22,11 +22,6 @@ const get = asyncHandler(async (req, res) => {
     },
   ]);
   return res.status(200).json(new ApiResponse(200, "your response", data));
-  // return res.json({
-  //   success: true,
-  //   message: "your data",
-  //   data,
-  // });
 });
 
 const set = asyncHandler(async (req, res) => {
