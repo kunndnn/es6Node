@@ -20,4 +20,7 @@ router.get("/allUsers", allUsers);
 // Apply errorHandlingMiddleware globally to all route handlers
 // router.use(errorHandler);
 
+// Apply errorHandlingMiddleware globally to all route handlers
+// router.use(errorHandler);
+
 export default router;
