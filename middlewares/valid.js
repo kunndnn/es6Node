@@ -1,20 +1,14 @@
 import { validationResult } from "express-validator";
-
+import { ErrorResponse } from "#helpers/response";
 const validationCheck = async (req, res, next) => {
   try {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(500).json({
-        status: false,
-        message: result.array()[0].msg,
-      });
+      res.status(500).json(new ErrorResponse(500, result.array()[0].msg, {}));
     }
     next();
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    res.status(500).json(new ErrorResponse(500, "Server error", {}));
   }
 };
 
