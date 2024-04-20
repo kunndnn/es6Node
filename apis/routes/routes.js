@@ -1,10 +1,10 @@
 import { Router } from "express";
 const router = Router();
 import { body, query } from "express-validator";
-import { validationCheck } from "../../middlewares/valid.js";
+import { validationCheck } from "#middlewares/valid";
 import { get, set, allUsers } from "../controllers/controllers.js"; // Ensure the correct path and extension
 import { encryptions, decryptions } from "../controllers/encryptions.js";
-import { errorHandler } from "../../middlewares/errorHandler.js";
+import { errorHandler } from "#middlewares/errorHandler";
 
 router
   .get("/get", get)

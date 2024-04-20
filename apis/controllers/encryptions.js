@@ -1,5 +1,5 @@
-import { encryptData, decryptData } from "../../helpers/hashing.js";
-import { asyncHandler } from "../../helpers/asyncHandler.js";
+import { encryptData, decryptData } from "#helpers/hashing";
+import { asyncHandler } from "#helpers/asyncHandler";
 const encryptions = asyncHandler(async (req, res) => {
   const bodyData = req.body;
 
