@@ -1,8 +1,8 @@
-import userModel from "../../models/users.js";
-import userCategoryModel from "../../models/userCategories.js";
-import { asyncHandler } from "../../helpers/asyncHandler.js";
-import { ApiResponse } from "../../helpers/response.js";
-import { encryptData, decryptData } from "../../helpers/hashing.js";
+import userModel from "#models/users";
+import userCategoryModel from "#models/userCategories";
+import { asyncHandler } from "#helpers/asyncHandler";
+import { ApiResponse } from "#helpers/response";
+import { encryptData, decryptData } from "#helpers/hashing";
 /**
  * To get the user data with joined to categories.
  * @constructor
