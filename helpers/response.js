@@ -12,4 +12,12 @@ class ApiResponse {
   }
 }
 
-export { sendResponse, ApiResponse };
+class ErrorResponse {
+  constructor(statusCode, message = "False", data) {
+    this.statusCode = statusCode;
+    this.message = message;
+    this.data = data;
+    this.success = statusCode < 400;
+  }
+}
+export { sendResponse, ApiResponse, ErrorResponse };
