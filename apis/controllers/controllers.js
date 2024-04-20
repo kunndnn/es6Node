@@ -30,7 +30,7 @@ const set = asyncHandler(async (req, res) => {
     name,
     email,
   }).save();
-  await new userCategoryModel({ userId: _id, name: Math.random() }).save();
+  await userCategoryModel.create({ userId: _id, name: Math.random() });
   return res.json({
     success: true,
     message: "your entered successfully",
