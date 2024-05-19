@@ -25,10 +25,18 @@ const get = asyncHandler(async (req, res) => {
 });
 
 const set = asyncHandler(async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, latitude, longitude } = req.body;
+  const location = {
+    type: "Point",
+    coordinates: [latitude, longitude],
+  };
+
+  // console.log({ location, latitude, longitude });
+
   const { _id } = await new userModel({
     name,
     email,
+    location,
   }).save();
   await userCategoryModel.create({ userId: _id, name: Math.random() });
   return res.json({
@@ -66,4 +74,24 @@ const allUsers = asyncHandler(async (req, res) => {
     });
   return res.status(200).json(new ApiResponse(200, "all data", users));
 });
-export { get, set, allUsers };
+
+const nearByUsers = asyncHandler(async (req, res) => {
+  const { latitude, longitude } = req.body;
+  const distance = 100000, // 10 km radius
+    type = "Point",
+    coordinates = [latitude, longitude];
+
+  const nearByUsers = await userModel.find({
+    location: {
+      $near: {
+        $geometry: { type, coordinates },
+        $maxDistance: distance,
+      },
+    },
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "nearby users", nearByUsers));
+});
+
+export { get, set, allUsers, nearByUsers };
