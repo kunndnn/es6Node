@@ -3,9 +3,9 @@ const app = express();
 import "dotenv/config";
 import logger from "morgan";
 import { connect } from "./db.js";
-const { port } = process.env;
+const { PORT } = process.env;
 connect().then(() => {
-  app.listen(port, () => console.log(`http://localhost:${port}`));
+  app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
 });
 app.use(express.static("public"));
 app.use(json());
