@@ -1,6 +1,6 @@
 import userModel from "#models/users";
 import userCategoryModel from "#models/userCategories";
-import { asyncHandler } from "#helpers/asyncHandler";
+import { promiseHandler } from "#helpers/promiseHandler";
 import { ApiResponse } from "#helpers/response";
 import { encryptData, decryptData } from "#helpers/hashing";
 /**
@@ -10,7 +10,7 @@ import { encryptData, decryptData } from "#helpers/hashing";
  * @param {email} email - The email of the person.
  */
 
-const get = asyncHandler(async (req, res) => {
+const get = promiseHandler(async (req, res) => {
   const data = await userModel.aggregate([
     {
       $lookup: {
@@ -24,7 +24,7 @@ const get = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "your response", data));
 });
 
-const set = asyncHandler(async (req, res) => {
+const set = promiseHandler(async (req, res) => {
   const { name, email, latitude, longitude } = req.body;
   const location = {
     type: "Point",
@@ -45,7 +45,7 @@ const set = asyncHandler(async (req, res) => {
   });
 });
 
-const allUsers = asyncHandler(async (req, res) => {
+const allUsers = promiseHandler(async (req, res) => {
   const users = await userModel
     .find()
     .select("_id name email")
@@ -75,7 +75,7 @@ const allUsers = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "all data", users));
 });
 
-const nearByUsers = asyncHandler(async (req, res) => {
+const nearByUsers = promiseHandler(async (req, res) => {
   const { latitude, longitude } = req.body;
   const distance = 100000, // 10 km radius
     type = "Point",
