@@ -1,47 +1,23 @@
-import encryptData from "../../helpers/encryptData.js";
-import decryptData from "../../helpers/decryptData.js";
-const encryptions = async (req, res) => {
-  try {
-    const bodyData = req.body;
+import { encryptData, decryptData } from "#helpers/hashing";
+import { promiseHandler } from "#helpers/promiseHandler";
+import { ApiResponse } from "#helpers/response";
+const encryptions = promiseHandler(async (req, res) => {
+  const bodyData = req.body;
 
-    Object.keys(bodyData).forEach((key) => {
-      bodyData[key] = encryptData(bodyData[key]);
-    });
+  Object.keys(bodyData).forEach((key) => {
+    bodyData[key] = encryptData(bodyData[key]);
+  });
 
-    return res.status(200).json({
-      status: true,
-      data: bodyData,
-      message: "Encrypted data",
-    });
-  } catch (error) {
-    console.log({ error });
-    return res.status(500).json({
-      status: false,
-      message: "Something went wrong",
-    });
-  }
-};
+  res.status(200).json(new ApiResponse(200, "Encrypted data", bodyData));
+});
 
-const decryptions = async (req, res) => {
-  try {
-    const bodyData = req.body;
+const decryptions = promiseHandler(async (req, res) => {
+  const bodyData = req.body;
 
-    Object.keys(bodyData).forEach((key) => {
-      bodyData[key] = decryptData(bodyData[key]);
-    });
+  Object.keys(bodyData).forEach((key) => {
+    bodyData[key] = decryptData(bodyData[key]);
+  });
 
-    return res.status(200).json({
-      status: true,
-      data: bodyData,
-      message: "decrypted data",
-    });
-  } catch (error) {
-    console.log({ error });
-
-    return res.status(500).json({
-      status: false,
-      message: "Something went wrong",
-    });
-  }
-};
+  res.status(200).json(new ApiResponse(200, "decrypted data", bodyData));
+});
 export { encryptions, decryptions };

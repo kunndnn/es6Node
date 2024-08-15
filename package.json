@@ -9,6 +9,11 @@
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
+  "imports": {
+    "#models/*": "./models/*.js",
+    "#helpers/*": "./helpers/*.js",
+    "#middlewares/*": "./middlewares/*.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -3,9 +3,10 @@ const app = express();
 import "dotenv/config";
 import logger from "morgan";
 import { connect } from "./db.js";
-connect();
-const { port } = process.env;
-app.listen(port, () => console.log(`http://localhost:${port}`));
+const { PORT } = process.env;
+connect().then(() => {
+  app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+});
 app.use(express.static("public"));
 app.use(json());
 app.use(urlencoded({ extended: true }));
