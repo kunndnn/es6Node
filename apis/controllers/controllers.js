@@ -9,16 +9,18 @@ import userCategoryModel from "../../models/userCategories.js";
  */
 const get = async (req, res) => {
   try {
-    const data = await userModel.aggregate([
-      {
-        $lookup: {
-          from: "usercategories",
-          localField: "_id",
-          foreignField: "userId",
-          as: "usersData",
-        },
-      },
-    ]);
+    // const data = await userModel.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "usercategories",
+    //       localField: "_id",
+    //       foreignField: "userId",
+    //       as: "usersData",
+    //     },
+    //   },
+    // ]);
+    // const data=await userModel.find().populate('')
+    const data = await userCategoryModel.find().populate("userId");
     return res.json({
       success: true,
       message: "your data",
@@ -34,11 +36,11 @@ const get = async (req, res) => {
 const set = async (req, res) => {
   try {
     const { name, email } = req.body;
-    const { _id } = await new userModel({
+    const { _id } = await userModel.create({
       name,
       email,
-    }).save();
-    await new userCategoryModel({ userId: _id, name: Math.random() }).save();
+    });
+    await userCategoryModel.create({ userId: _id, name: Math.random() });
     return res.json({
       success: true,
       message: "your entered successfully",
